@@ -1,0 +1,33 @@
+<div :class="`theme-${websiteTheme} bg-bgSecondary p-4`">
+      bgSecondary
+      <div :class="`theme-${websiteTheme} bg-primary p-4`">
+        primary
+        <div :class="`theme-${websiteTheme} bg-secondary p-4`">
+          secondary
+        </div>
+        <div :class="`theme-${websiteTheme} bg-tertiary p-4`">
+          tertiary
+        </div>
+        <div :class="`theme-${websiteTheme} bg-quaternary p-4`">
+          quaternary
+        </div>
+        <div :class="`theme-${websiteTheme} bg-quinary p-4`">
+          quinary
+        </div>
+      </div>
+      <div :class="`theme-${websiteTheme} bg-primaryText p-4`">
+        <p class="text-white">primaryText</p>
+        <div :class="`theme-${websiteTheme} bg-secondaryText p-4`">
+          secondaryText
+        </div>
+        <div :class="`theme-${websiteTheme} bg-tertiaryText p-4`">
+          tertiaryText
+        </div>
+        <div :class="`theme-${websiteTheme} bg-quaternaryText p-4`">
+          quaternaryText
+        </div>
+        <div :class="`theme-${websiteTheme} bg-quinaryText p-4`">
+          quinaryText
+        </div>
+      </div>
+    </div>

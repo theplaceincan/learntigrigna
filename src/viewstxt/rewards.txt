@@ -1,0 +1,7 @@
+<div>
+        <div class="flex overflow-x-scroll">
+          <img class="rewardDimensions" v-for="rewardLevel in rewardLevelShow"
+                :src="`/src/assets/images/rewardicons/${rewardLevel}.png`" />
+          <img v-if="model.level > 1" class="rewardDimensions" src="/src/assets/images/rewardicons/anbesa.png" />
+        </div>
+      </div>
