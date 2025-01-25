@@ -104,9 +104,9 @@ let welcomeQuestionnaire = ref([
   // },
 ])
 
-let welcomeScreenStage = ref(2);
+let welcomeScreenStage = ref(1); // starts at 1
 let loadingMsg = ref(false)
-console.log("james@gmail.com")
+// console.log("james@gmail.com")
 let nextButtonDisabled = ref(true)
 let currentQuestionIndex = ref(0)
 let answerSelected = ref(false)
@@ -229,8 +229,8 @@ onMounted(() => {
 <template>
   <div class="min-h-[100vh] flex flex-col items-center justify-center">
     <p
-      :class="`fadeInOutWelcomeMsg absolute theme-${websiteTheme} text-secondaryText pointer-events-none font-semibold text-2xl`">
-      Welcome!</p>
+      :class="`fadeInOutWelcomeMsg absolute theme-${websiteTheme} text-secondaryText pointer-events-none font-semibold`">
+      Selam selam! 😊</p>
     <div v-if="welcomeScreenStage === 1" v-for="(q, index) in welcomeQuestionnaire" :key="index"
       class="firstWelcomeStage w-full">
       <div v-if="index === currentQuestionIndex" class="space-y-5 flex flex-col items-center">
@@ -251,7 +251,7 @@ onMounted(() => {
         <div class="space-y-2 w-[280px]">
           <button :class="nextButtonDisabled ? 'disabledButton' : ''" class="orangeButtonTheme largeBtn w-full"
             @click="nextQuestion()">Next</button>
-          <a href="/"><button class="blueButtonTheme largeBtn w-full my-2">Go back</button></a>
+          <a href="/signin"><button class="blueButtonTheme largeBtn w-full my-2">Go back</button></a>
         </div>
       </div>
     </div>
@@ -361,14 +361,21 @@ onMounted(() => {
 @keyframes fadeInOutWelcomeMsg {
   0% {
     opacity: 0;
+    rotate: 15deg;
   }
 
   25% {
     opacity: 1;
+    font-size:xx-large;
+    color: rgb(0, 179, 0);
+    rotate: -15deg;
   }
 
   50% {
     opacity: 1;
+    font-size:xx-large;
+    color: var(--color-ltColor1);
+    rotate: 15deg;
   }
 
   100% {

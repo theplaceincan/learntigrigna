@@ -40,6 +40,7 @@ onUnmounted(() => {
     <div class="space-x-2">
       <a target="_blank" :href="link.url" v-for="link in links_social" :class="`theme-${websiteTheme} transition ease-in-out font-semibold text-quaternaryText hover:text-ltColor1 active:text-ltColorDark`">{{ link.name }}</a>
     </div>
+    <p :class="`theme-${websiteTheme} text-quaternaryText`">&copy; {{ currentYear }} LearnTigrigna. All rights reserved.</p>
   </div>
 </template>
 

@@ -50,16 +50,16 @@ onUnmounted(() => {
   <div :class="[`theme-${websiteTheme} bg-bgPrimary`, { 'shadow-md': isScrolled }]"
     class="w-full transition ease-in-out stick">
     <!-- justify-between px-2 py-1 -->
-    <div class="flex justify-center items-center py-1">
+    <div class="flex justify-between items-center py-2 px-3">
       <div class="flex items-center justify-center">
         <a href="/">
-          <img v-if="websiteTheme == 'light'" class="w-64" src="../assets/images/logos/textlogo.png">
-          <img v-if="websiteTheme == 'dark'" class="w-64" src="../assets/images/logos/textlogodark.png">
+          <img v-if="websiteTheme == 'light'" class="w-12" src="../assets/images/logos/logo.png">
+          <img v-if="websiteTheme == 'dark'" class="w-12" src="../assets/images/logos/logo.png">
         </a>
       </div>
       <div class="flex items-center justify-center">
         <button
-          :class="`theme-${websiteTheme} text-primaryText bg-quaternary transition ease-in-out p-1 rounded-full hover:bg-tertiary active:bg-ltColorDark`"
+          :class="`theme-${websiteTheme} text-primaryText bg-zinc-500/30 transition ease-in-out p-1 rounded-full hover:bg-tertiary active:bg-ltColorDark`"
           @click="toggleTheme()">
           <svg v-if="darkTheme" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="size-6">

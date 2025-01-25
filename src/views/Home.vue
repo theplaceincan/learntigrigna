@@ -77,7 +77,14 @@ async function getData() {
   Games.value = await pb.collection("gameCards").getFullList({ sort: "-created" });
 }
 
+// Authentication-related functions
+function logOut() {
+  pb.authStore.clear()
+  router.push('/')
+  open = false
+}
 
+// Calculating levels, hearts
 
 onMounted(() => {
   getData();
@@ -93,19 +100,36 @@ onMounted(() => {
 <!-- :class="`theme-${websiteTheme} `" -->
 <!-- :href="`/${e.ref}`" -->
 <!-- disabledLesson -->
+<!-- <p :class="`theme-${websiteTheme} text-primaryText`"> </p> -->
 
 <template>
   <div v-if="welcomeScreen"
     :class="`fadeInOutWelcomeMsg theme-${websiteTheme} h-[100vh] w-full bg-bgPrimary absolute flex items-center justify-center`">
     <p :class="`theme-${websiteTheme} text-primaryText text-xl font-semibold`">Selam {{ model.username }}!</p>
   </div>
-  <div :class="`theme-${websiteTheme} h-[58.67px]`"></div>
-  <div class="fadeInOutMainPage min-h-[100vh]">
-    <!-- <div class="bg-red-100 flex flex-col md:flex-row">
-      <div class="w-[17%] bg-red-500">e</div>
-      <div class="w-[55%] bg-red-400">e</div>
-      <div class="w-[28%] bg-red-300">e</div>
-    </div> -->
+  <div :class="`fadeInOutMainPage pt-[58.67px]`">
+    <div class="flex flex-col md:flex-row h-[100vh]">
+      <div class="border border-red-300 p-2">
+        <p :class="`theme-${websiteTheme} text-primaryText text-lg`">Kemey {{ model.username }}!</p>
+        <div>
+          <p :class="`theme-${websiteTheme} text-primaryText`">Level: {{ model.level }}</p>
+          <div :class="`theme-${websiteTheme} bg-secondary w-[200px] flex justify-start rounded-full`"><div :style="`width: ${levelPercentage}%`" class="p-1 rounded-full bg-green-500"></div></div>
+        </div>
+        <div>
+          <p :class="`theme-${websiteTheme} text-primaryText`">Lives</p>
+          <div class="">
+            <img class="absolute w-32" src="/src/assets/images/rewardicons/riphearts.png">
+            <img :class="`relative ml-6 w-32`" src="/src/assets/images/rewardicons/hearts.png">
+          </div>
+        </div>
+      </div>
+      <div class="overflow-y-scroll border border-blue-300 p-2">
+
+      </div>
+      <div class="border border-green-300 p-2">
+
+      </div>
+    </div>
   </div>
 </template>
 

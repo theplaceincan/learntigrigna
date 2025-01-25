@@ -33,7 +33,7 @@ export default {
         quinaryText: "var(--color-quinaryText)",
       },
       fontFamily: {
-        // sans: ['Arial', 'sans-serif'],
+        sans: ['Comic Sans MS', 'sans-serif'],
       },
     },
   },
