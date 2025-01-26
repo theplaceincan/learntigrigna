@@ -47,6 +47,12 @@ let Games = ref([]);
 let LearningPlanJSON = ref({
   "chapters": []
 });
+
+let loading_LessonsList = ref(true);
+let loading_ChaptersList = ref(true);
+let loading_PhrasesAndWords = ref(true);
+let loading_Games = ref(true);
+
 async function findLessonByID(_id) {
   const lessonData = await pb.collection('lessonplan').getOne(_id, {});
   return {
@@ -58,11 +64,19 @@ async function findLessonByID(_id) {
   };
 }
 async function getData() {
+
+  loading_LessonsList.value = true;
+  loading_ChaptersList.value = true;
+  loading_PhrasesAndWords.value = true;
+  loading_Games.value = true;
+
   const recById = await pb.collection('chaptersplan').getFullList({ sort: '-created' });
+  loading_ChaptersList.value = false;
+
   for (let chapter of recById) {
     LearningPlanJSON.value.chapters.push({
       chapter: chapter.chapter,
-      color: "red",
+      color: chapter.color,
       chapter_num: chapter.chapter_num,
       lessons: [],
     });
@@ -73,8 +87,12 @@ async function getData() {
     });
     await Promise.all(lessonPromises);
   }
+  loading_LessonsList.value = false;
+
   PhrasesAndWords.value = await pb.collection("wordslist").getFullList({ sort: "-created" });
+  loading_PhrasesAndWords.value = false;
   Games.value = await pb.collection("gameCards").getFullList({ sort: "-created" });
+  loading_Games.value = false;
 }
 
 // Authentication-related functions
@@ -84,7 +102,9 @@ function logOut() {
   open = false
 }
 
-// Calculating levels, hearts
+// Calculating levels
+let levelPercentage = ref(model.value.level);
+// levelPercentage.value = 50;
 
 onMounted(() => {
   getData();
@@ -108,26 +128,87 @@ onMounted(() => {
     <p :class="`theme-${websiteTheme} text-primaryText text-xl font-semibold`">Selam {{ model.username }}!</p>
   </div>
   <div :class="`fadeInOutMainPage pt-[58.67px]`">
-    <div class="flex flex-col md:flex-row h-[100vh]">
-      <div class="border border-red-300 p-2">
-        <p :class="`theme-${websiteTheme} text-primaryText text-lg`">Kemey {{ model.username }}!</p>
-        <div>
-          <p :class="`theme-${websiteTheme} text-primaryText`">Level: {{ model.level }}</p>
-          <div :class="`theme-${websiteTheme} bg-secondary w-[200px] flex justify-start rounded-full`"><div :style="`width: ${levelPercentage}%`" class="p-1 rounded-full bg-green-500"></div></div>
-        </div>
-        <div>
-          <p :class="`theme-${websiteTheme} text-primaryText`">Lives</p>
-          <div class="">
-            <img class="absolute w-32" src="/src/assets/images/rewardicons/riphearts.png">
-            <img :class="`relative ml-6 w-32`" src="/src/assets/images/rewardicons/hearts.png">
+    <div class="flex flex-col justify-center md:flex-row md:h-[100vh]">
+      <!-- ----- User info section ----- -->
+      <div class="text-center md:w-[33%] p-2">
+        <p :class="`theme-${websiteTheme} text-primaryText text-xl mb-3`">Kemey {{ model.username }}!</p>
+        <div class="flex flex-col justify-center"
+          :class="`theme-${websiteTheme} bg-secondaryTransparent rounded-lg p-2 mx-3`">
+          <div class="flex justify-center">
+            <div>
+              <p :class="`theme-${websiteTheme} text-green-500`">Level: {{ model.level }}</p>
+              <div :class="`theme-${websiteTheme} bg-tertiary w-[200px] flex justify-start rounded-full`">
+                <div :style="`width: ${levelPercentage}%`" class="p-1 rounded-full bg-green-500"></div>
+              </div>
+            </div>
+          </div>
+          <div class="my-2 space-x-3 flex justify-center">
+            <div class="flex items-center space-x-[2px]">
+              <img class="w-6" src="/src/assets/images/rewardicons/heart.png">
+              <p :class="`theme-${websiteTheme} text-red-500 font-bold`">{{ model.lives }}</p>
+            </div>
+            <div class="flex items-center space-x-[2px]">
+              <img class="w-6" src="/src/assets/images/rewardicons/coins.png">
+              <p :class="`theme-${websiteTheme} text-yellow-500`">{{ model.coins }}</p>
+            </div>
+            <div class="flex items-center space-x-[2px]">
+              <img class="w-6" src="/src/assets/images/rewardicons/xp.png">
+              <p :class="`theme-${websiteTheme} text-yellow-500`">{{ model.xp }}</p>
+            </div>
           </div>
         </div>
       </div>
-      <div class="overflow-y-scroll border border-blue-300 p-2">
-
+      <!-- ----- Lessons section ----- -->
+      <div class="md:w-[33%] p-2">
+        <p :class="`theme-${websiteTheme} text-primaryText text-center text-xl mb-5`">Lessons</p>
+        <div class="md:w-[100%]">
+          <div v-if="loading_LessonsList">Loading...</div>
+          <!-- :style="{ backgroundColor: `rgba(${chapter.color})`}" -->
+          <div v-if="!loading_LessonsList" :class="`theme-${websiteTheme} my-5`"
+            v-for="chapter in [...LearningPlanJSON.chapters].reverse()">
+            <div :class="`theme-${websiteTheme} text-primaryText font-semibold text-xl`">
+              <p class="text-center my-2">{{ chapter.chapter }}</p>
+            </div>
+            <div>
+              <div v-for="(lesson, index) in chapter.lessons">
+                <a :href="lesson.url">
+                  <button :class="`theme-${websiteTheme} hover:border-ltColor1 hover:bg-yellow-500/20 active:bg-yellow-500/50 transition ease-in-out w-full rounded-full border border-tertiary p-2`">
+                    <p :class="`theme-${websiteTheme} text-primaryText text-lg`">{{ lesson.lesson_name }}</p>
+                  </button>
+                </a>
+                <div v-if="index != chapter.lessons.length - 1" class="w-full flex justify-center">
+                  <div :class="`theme-${websiteTheme} bg-tertiary w-[2px] h-5`"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="border border-green-300 p-2">
-
+      <!-- ----- Games and Words section ----- -->
+      <div class="md:w-[33%] p-2">
+        <p :class="`theme-${websiteTheme} text-primaryText text-center text-xl mb-5`">Phrases and Words</p>
+        <div class="flex flex-wrap justify-center">
+          <div
+            :class="`flex md:w-[400px] w-[100%] items-center theme-${websiteTheme} bg-primary border border-tertiary hover:border-ltColor1 transition ease-in-out m-2 p-2 rounded-md`"
+            v-for="e in PhrasesAndWords.slice(0,5)">
+            <div class="w-[50%]">
+              <p :class="`theme-${websiteTheme} text-primaryText font-semibold text-lg`">{{ e.tigrignaWord }}</p>
+              <p :class="`theme-${websiteTheme} text-tertiaryText`">"{{ e.tigrignaSound }}"</p>
+              <p :class="`theme-${websiteTheme} text-secondaryText`">{{ e.tigrignaEnglish }}</p>
+              <button class="audioButton">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="size-6">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+                </svg>
+              </button>
+            </div>
+            <div class="w-[50%] flex justify-center">
+              <img class="w-28"
+                :src="`https://learntigrigna.pockethost.io/api/files/${e.collectionId}/${e.id}/${e.tigrignaImage}`">
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

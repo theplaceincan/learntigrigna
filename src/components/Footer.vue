@@ -17,6 +17,7 @@ let links_social = ref([
   { name: "Instagram", url: "https://www.instagram.com/learntigrigna/" },
 ])
 
+let currentYear = new Date().getFullYear().toString()
 
 onMounted(() => {
   // Updates isAuthenticated automatically

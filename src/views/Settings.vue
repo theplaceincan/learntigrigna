@@ -39,8 +39,8 @@ onMounted(() => {
     <div :class="`theme-${websiteTheme} bg-secondary p-2`">
       <div>
         <p :class="`theme-${websiteTheme} text-primaryText`" class="font-semibold mb-1 underline pointer-events-none">Account Information</p>
-        <p :class="`theme-${websiteTheme} text-secondaryText font-semibold`"><span>Username: </span><span :class="`theme-${websiteTheme}`">{{ model.username }}</span></p>
-        <p :class="`theme-${websiteTheme} text-secondaryText font-semibold`"><span>Email: </span><span :class="`theme-${websiteTheme}`">{{ model.email }}</span></p>
+        <p :class="`theme-${websiteTheme} text-secondaryText font-semibold`"><span>Username: </span><span :class="`theme-${websiteTheme} font-normal`">{{ model.username }}</span></p>
+        <p :class="`theme-${websiteTheme} text-secondaryText font-semibold`"><span>Email: </span><span :class="`theme-${websiteTheme} font-normal`">{{ model.email }}</span></p>
         <p :class="`theme-${websiteTheme} text-secondaryText font-semibold`"><span>Joined on </span><span :class="`theme-${websiteTheme}`">{{ formatDate(model.created) }}</span></p>
       </div>
       <div :class="`theme-${websiteTheme} p-[1px] bg-tertiary my-2`"></div>
