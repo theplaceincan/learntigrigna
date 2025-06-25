@@ -206,6 +206,8 @@ async function goToNextWelcomeScreenStage(_input) {
     }
   }
 }
+// ADD USERNAME CHECK FOR IF THERE IS AN EXISTING USERNAME!!!
+// STOP PRINTING DATA TO CONSOLE IF THERE'S AN ERROR
 
 function processAnswer(_index, _answer) {
   nextButtonDisabled.value = false;

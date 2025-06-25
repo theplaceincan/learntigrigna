@@ -21,38 +21,40 @@ let sEmail = ref("");
 let sPassword = ref("");
 let rEmail = ref("");
 
+let errMsg = ref("")
+
 // Password Reset
 const resetPasswordForm = () => {
-    if (!rEmail.value) {
-        alert('Password or Email is not complete.');
-        return;
-    }
-    resetPassword({ email: rEmail.value });
+  if (!rEmail.value) {
+    alert('Password or Email is not complete.');
+    return;
+  }
+  resetPassword({ email: rEmail.value });
 }
 async function resetPassword(resetData) {
-    try {
-        await pb.collection('users').requestPasswordReset(resetData.email);
-    } catch (error) {
-        console.log(error)
-    }
-    passwordResetInfo.value = true
+  try {
+    await pb.collection('users').requestPasswordReset(resetData.email);
+  } catch (error) {
+    console.log(error)
+  }
+  passwordResetInfo.value = true
 }
 
 // Sign In
 const signInForm = () => {
-    if (!sEmail.value || !sPassword.value) {
-        alert('Password or Email is not complete.');
-        return;
-    }
-    signIn({ email: sEmail.value, password: sPassword.value });
+  if (!sEmail.value || !sPassword.value) {
+    alert('Password or Email is not complete.');
+    return;
+  }
+  signIn({ email: sEmail.value, password: sPassword.value });
 };
 async function signIn(signInData) {
-    try {
-        const record = await pb.collection('users').authWithPassword(signInData.email, signInData.password);
-        router.push('/')
-    } catch (error) {
-        alert(error.message)
-    }
+  try {
+    const record = await pb.collection('users').authWithPassword(signInData.email, signInData.password);
+    router.push('/')
+  } catch (error) {
+    alert(error.message)
+  }
 }
 
 onMounted(() => {
@@ -67,45 +69,56 @@ onMounted(() => {
 <!-- :class="`theme-${websiteTheme} w-72 greenButtonTheme p-3 px-6 rounded-md text-white font-semibold`" -->
 
 <template>
-<div class="min-h-[100vh] flex items-center justify-center">
-  <div class="max-w-[280px]" v-if="registrationView === 0">
-    <p :class="`theme-${websiteTheme} text-secondaryText text-center pointer-events-none font-semibold text-xl`">Pick your sign-in option</p>
-    <div class="my-4 space-y-2">
-      <a href="/welcome"><button class="greenButtonTheme w-full largeBtn">Create an account</button></a>
-      <button @click="registrationView = 1" class="blueButtonTheme w-full largeBtn">Log into your account</button>
+  <div class="min-h-[100vh] flex items-center justify-center">
+    <div class="max-w-[280px]" v-if="registrationView === 0">
+      <p :class="`theme-${websiteTheme} text-secondaryText text-center pointer-events-none font-semibold text-xl`">Pick
+        your sign-in option</p>
+      <div class="my-4 space-y-2">
+        <a href="/welcome"><button class="greenButtonTheme w-full largeBtn">Create an account</button></a>
+        <button @click="registrationView = 1" class="blueButtonTheme w-full largeBtn">Log into your account</button>
+      </div>
+    </div>
+    <div v-if="registrationView === 1" class="flex flex-col items-center w-full">
+      <p :class="`theme-${websiteTheme} text-secondaryText pointer-events-none font-semibold text-xl`">Sign In</p>
+      <div class="space-y-1 max-w-[280px] my-2">
+        <input v-model="sEmail" :class="`theme-${websiteTheme} inputCSS w-full placeholder:text-quaternaryText`"
+          type="email" placeholder="Email">
+        <input v-model="sPassword" :class="`theme-${websiteTheme} inputCSS w-full placeholder:text-quaternaryText`"
+          type="password" placeholder="Password">
+        <p class="text-red-600 text-sm text-center">{{ errMsg }}</p>
+      </div>
+      <div>
+        <button @click.prevent="signInForm(sEmail, sPassword)" class="greenButtonTheme w-full largeBtn">Sign In</button>
+      </div>
+      <div class="my-5 flex flex-col items-center space-y-1">
+        <a href="/welcome" :class="`theme-${websiteTheme} text-quaternaryText linkBtn`">Don't have an account? Create
+          one!</a>
+        <a @click="registrationView = 2" :class="`theme-${websiteTheme} text-quaternaryText linkBtn`">Forgot your
+          password? Reset it.</a>
+      </div>
+    </div>
+    <div v-if="registrationView === 2" class="flex flex-col items-center w-full">
+      <p :class="`theme-${websiteTheme} text-secondaryText pointer-events-none font-semibold text-xl`">Password Reset
+      </p>
+      <div class="space-y-1 w-[280px] my-2">
+        <input v-model="rEmail" :class="`theme-${websiteTheme} inputCSS w-full placeholder:text-quaternaryText`"
+          type="email" placeholder="Email">
+      </div>
+      <div>
+        <button @click.prevent="resetPasswordForm(rEmail)" class="orangeButtonTheme w-full largeBtn">Request Reset
+          Email</button>
+      </div>
+      <div v-if="passwordResetInfo" :class="`theme-${websiteTheme} bg-secondary p-2 rounded-md my-2 w-[280px]`">
+        <p :class="`theme-${websiteTheme} text-tertiaryText text-sm text-center italic`">If your account exists, we'll
+          send you a password reset email. This might take a minute or so. Check spam folder if you cannot find the
+          email.</p>
+      </div>
+      <div class="my-5">
+        <a @click="registrationView = 1" :class="`theme-${websiteTheme} text-quaternaryText linkBtn`">Return to Sign
+          In</a>
+      </div>
     </div>
   </div>
-  <div v-if="registrationView === 1" class="flex flex-col items-center w-full">
-    <p :class="`theme-${websiteTheme} text-secondaryText pointer-events-none font-semibold text-xl`">Sign In</p>
-    <div class="space-y-1 max-w-[280px] my-2">
-      <input v-model="sEmail" :class="`theme-${websiteTheme} inputCSS w-full placeholder:text-quaternaryText`" type="email" placeholder="Email">
-      <input v-model="sPassword" :class="`theme-${websiteTheme} inputCSS w-full placeholder:text-quaternaryText`" type="password" placeholder="Password">
-    </div>
-    <div>
-      <button @click.prevent="signInForm(sEmail, sPassword)" class="greenButtonTheme w-full largeBtn">Sign In</button>
-    </div>
-    <div class="my-5 flex flex-col items-center space-y-1">
-      <a href="/welcome" :class="`theme-${websiteTheme} text-quaternaryText linkBtn`">Don't have an account? Create one!</a>
-      <a @click="registrationView = 2" :class="`theme-${websiteTheme} text-quaternaryText linkBtn`">Forgot your password? Reset it.</a>
-    </div>
-  </div>
-  <div v-if="registrationView === 2" class="flex flex-col items-center w-full">
-    <p :class="`theme-${websiteTheme} text-secondaryText pointer-events-none font-semibold text-xl`">Password Reset</p>
-    <div class="space-y-1 w-[280px] my-2">
-      <input v-model="rEmail" :class="`theme-${websiteTheme} inputCSS w-full placeholder:text-quaternaryText`" type="email" placeholder="Email">
-    </div>
-    <div>
-      <button @click.prevent="resetPasswordForm(rEmail)" class="orangeButtonTheme w-full largeBtn">Request Reset Email</button>
-    </div>
-    <div v-if="passwordResetInfo" :class="`theme-${websiteTheme} bg-secondary p-2 rounded-md my-2 w-[280px]`">
-      <p :class="`theme-${websiteTheme} text-tertiaryText text-sm text-center italic`">If your account exists, we'll send you a password reset email. This might take a minute or so. Check spam folder if you cannot find the email.</p>
-    </div>
-    <div class="my-5">
-      <a @click="registrationView = 1" :class="`theme-${websiteTheme} text-quaternaryText linkBtn`">Return to Sign In</a>
-    </div>
-  </div>
-</div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
